@@ -1,6 +1,6 @@
 # Gameboxd — Setup Instructions (MongoDB)
 
-## Tech Stack (all from the Full Stack Decal curriculum)
+## Tech Stack
 - **Frontend:** React, React Router v6, Axios, CSS
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB with Mongoose (ODM)
@@ -149,18 +149,3 @@ gameboxd/
 | games | Games cached from RAWG |
 | libraryentries | User ↔ Game relationship with status |
 | reviews | Rating + text, with embedded comments and likes array |
-
-## Troubleshooting
-
-**"MongoDB connection failed"**
-→ Make sure MongoDB is running. On Mac with Homebrew: `brew services start mongodb-community`
-→ On Windows: start "MongoDB" from Services, or run `mongod` in a terminal
-
-**RAWG returns empty results**
-→ Check RAWG_API_KEY in `.env` — restart backend after any `.env` change
-
-**Frontend shows "Network Error"**
-→ Make sure backend is running on port 4000 and `frontend/package.json` has `"proxy": "http://localhost:4000"`
-
-**View your data visually**
-→ Open MongoDB Compass and connect to `mongodb://localhost:27017` — you'll see the `gameboxd` database and all collections
