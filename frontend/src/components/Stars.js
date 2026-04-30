@@ -1,13 +1,20 @@
-// frontend/src/components/Stars.js
-export default function Stars({ rating, onSet }) {
+export default function Stars({ rating = 0, onSet, size = 'default' }) {
+  const safeRating = Math.max(0, Math.min(5, Math.round(rating)));
   return (
-    <span className="stars">
-      {[1, 2, 3, 4, 5].map(i => (
+    <span className={`stars stars-${size}`}>
+      {[1, 2, 3, 4, 5].map((star) => (
         <span
-          key={i}
-          className={`star ${i <= rating ? 'filled' : ''} ${onSet ? 'interactive' : ''}`}
-          onClick={() => onSet && onSet(i)}
-        >★</span>
+          key={star}
+          className={`star ${star <= safeRating ? 'filled' : ''} ${onSet ? 'interactive' : ''}`}
+          onClick={() => onSet && onSet(star)}
+          role={onSet ? 'button' : undefined}
+          tabIndex={onSet ? 0 : undefined}
+          onKeyDown={(event) => {
+            if (onSet && (event.key === 'Enter' || event.key === ' ')) onSet(star);
+          }}
+        >
+          ★
+        </span>
       ))}
     </span>
   );

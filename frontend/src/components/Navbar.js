@@ -1,37 +1,49 @@
-// frontend/src/components/Navbar.js
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { logoPath } from '../data/siteData';
+
+const linkItems = [
+  { to: '/login', label: 'Log in', guestOnly: true },
+  { to: '/signup', label: 'Make Account', guestOnly: true },
+  { to: '/games', label: 'Games' },
+  { to: '/about', label: 'About Us' },
+  { to: '/members', label: 'Members' },
+  { to: '/contact', label: 'Contact Us' },
+];
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <nav className="navbar">
-      <Link to="/" className="navbar-logo">
-        🎮 <span>Gameboxd</span>
+    <nav className="site-navbar">
+      <Link to="/" className="site-logo">
+        <img loading="lazy" decoding="async" src={logoPath} alt="Gameboxd logo" />
+        <span>Gameboxd</span>
       </Link>
 
-      <div className="navbar-links">
-        <NavLink to="/search">Search</NavLink>
-        <NavLink to="/activity">Activity</NavLink>
-      </div>
-
-      <div className="navbar-right">
-        {user ? (
-          <>
-            <NavLink to={`/library/${user._id}`} className="btn btn-ghost btn-sm">Library</NavLink>
-            <NavLink to={`/profile/${user._id}`} className="nav-username">
-              {user.username.slice(0, 2).toUpperCase()}
+      <div className="site-nav-links">
+        {linkItems
+          .filter((item) => !(user && item.guestOnly))
+          .map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.to === '/'}>
+              {item.label}
             </NavLink>
-            <button className="btn btn-ghost btn-sm" onClick={() => { logout(); navigate('/'); }}>
+          ))}
+
+        {user && (
+          <>
+            <NavLink to={`/library/${user._id}`}>Library</NavLink>
+            <NavLink to={`/profile/${user._id}`}>Account</NavLink>
+            <button
+              className="text-nav-button"
+              onClick={() => {
+                logout();
+                navigate('/');
+              }}
+            >
               Log out
             </button>
-          </>
-        ) : (
-          <>
-            <Link to="/login" className="btn btn-ghost btn-sm">Log in</Link>
-            <Link to="/signup" className="btn btn-primary btn-sm">Sign up</Link>
           </>
         )}
       </div>

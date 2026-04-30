@@ -4,8 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
-const TABS = ['played', 'playing', 'wishlist'];
-const BADGE = { played: 'badge-played', playing: 'badge-playing', wishlist: 'badge-wishlist' };
+const TABS = ['played', 'wishlist'];
+const BADGE = { played: 'badge-played', wishlist: 'badge-wishlist' };
 
 export default function Library() {
   const { userId } = useParams();
@@ -46,7 +46,7 @@ export default function Library() {
         <div key={entry._id} className="game-row">
           <div className="game-cover" onClick={() => navigate(`/game/${entry.game?.rawgId}`)}>
             {entry.game?.backgroundImage
-              ? <img src={entry.game.backgroundImage} alt={entry.game.name} />
+              ? <img loading="lazy" decoding="async" src={entry.game.backgroundImage} alt={entry.game.name} />
               : '🎮'}
           </div>
           <div className="game-row-info">

@@ -1,46 +1,39 @@
-// frontend/src/pages/Login.js
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import { overlayBulbasaur } from '../data/siteData';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
-  const [form, setForm] = useState({ username: '', password: '' });
-  const [error, setError] = useState('');
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [error, setError] = useState('');
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     try {
-      const { data } = await api.post('/auth/login', form);
-      if (data.error) { setError(data.error); return; }
+      const { data } = await api.post('/auth/login', { username: form.username, password: form.password });
       login(data.user, data.token);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || 'Log in failed');
     }
   }
 
   return (
-    <div className="page-narrow">
-      <div className="auth-card">
-        <h1 className="auth-title">Welcome back</h1>
-        <p className="auth-sub">Log in to track your games and share reviews.</p>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Username</label>
-            <input value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} placeholder="your username" />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="••••••••" />
-          </div>
-          {error && <p className="error-msg">{error}</p>}
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 8 }}>Log in</button>
+    <div className="auth-page-shell">
+      <div className="bulba-overlay" style={{ backgroundImage: `url(${overlayBulbasaur})` }} />
+      <section className="auth-form-wrap">
+        <h1 className="pixel-title giant-title auth-title-page">LOG IN</h1>
+        <form className="pixel-form" onSubmit={handleSubmit}>
+          <input value={form.username} onChange={(event) => setForm({ ...form, username: event.target.value })} placeholder="Username" />
+          <input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="email@example.com" />
+          <input type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Password" />
+          {error && <p className="form-error">{error}</p>}
+          <button className="pill-button giant" type="submit">Log In</button>
         </form>
-        <p className="auth-switch">New here? <Link to="/signup">Create an account</Link></p>
-      </div>
+      </section>
     </div>
   );
 }
